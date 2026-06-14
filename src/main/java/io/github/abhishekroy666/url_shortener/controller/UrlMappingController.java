@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -49,8 +50,8 @@ public class UrlMappingController {
             UrlMappingDto dto = service.getUrlMapping(token);
             log.info("Redirect to: {}", dto.getLongUrl());
             response.sendRedirect(dto.getLongUrl());
-        } catch (Exception e) {
-            log.error("Short URL token {} has expired or does not exist.", token, e);
+        } catch (IOException | NoSuchElementException e) {
+            log.error("Exception occurred for token {}", token, e);
             response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
