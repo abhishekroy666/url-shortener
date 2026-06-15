@@ -102,7 +102,7 @@ server.port=8080
 
 # Database (if applicable)
 spring.datasource.url=jdbc:h2:file:./data/url_shortener_db;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY
-spring.datasource.username=root
+spring.datasource.username=your_username
 spring.datasource.password=your_password
 ```
 
