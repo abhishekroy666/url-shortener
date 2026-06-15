@@ -11,6 +11,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Service implementation that handles creation and retrieval of
+ * URL mappings between the original long URL and the short token.
+ * <p></p>
+ * This class is responsible for persisting new mappings, encoding
+ * database IDs into Base62 tokens, and building the user-facing
+ * short URL. It also caches resolved mappings for faster lookups.
+ */
 @Service
 @Slf4j
 public class UrlMappingServiceImpl implements UrlMappingService {
@@ -21,6 +29,17 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         this.repository = repository;
     }
 
+    /**
+     * Create or return an existing short-token mapping for the supplied long URL.
+     * <p>
+     * If the long URL already exists in the database, the existing mapping is used.
+     * Otherwise, a new {@link io.github.abhishekroy666.url_shortener.entity.UrlMapping}
+     * is persisted and its auto-generated ID is encoded to a Base62 token.
+     * </p>
+     *
+     * @param longUrl the original long URL to shorten
+     * @return a {@link UrlMappingDto} containing the original URL, token and short URL
+     */
     @Override
     public UrlMappingDto shortenUrl(String longUrl) {
         // Optional - Return existing token if URL already exists
@@ -45,6 +64,13 @@ public class UrlMappingServiceImpl implements UrlMappingService {
         return dto;
     }
 
+    /**
+     * Resolve a short token back to its URL mapping.
+     *
+     * @param token Base62 short token
+     * @return UrlMappingDto containing the long URL and related data
+     * @throws NoSuchElementException if no mapping exists for the token
+     */
     @Override
     @Cacheable(value = "urls", key = "#token")
     public UrlMappingDto getUrlMapping(String token) throws NoSuchElementException{

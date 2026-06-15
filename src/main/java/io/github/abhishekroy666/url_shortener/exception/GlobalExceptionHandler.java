@@ -9,10 +9,24 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Global exception handler that maps common exceptions to HTTP responses.
+ * <p>
+ * Currently handles {@link NoSuchElementException} by returning a 404
+ * response with an {@link ErrorDto} body. Additional handlers can be
+ * added here to centralize error handling for the API.
+ * </p>
+ */
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
+    /**
+     * Handle resource not found exceptions.
+     *
+     * @param exception the thrown NoSuchElementException
+     * @return ResponseEntity containing an {@link ErrorDto} and 404 status
+     */
     @ExceptionHandler(exception = NoSuchElementException.class)
     public ResponseEntity<?> handleNoSuchElementException(NoSuchElementException exception) {
         ErrorDto errorDto = new ErrorDto();

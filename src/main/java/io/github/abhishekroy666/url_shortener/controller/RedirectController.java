@@ -13,6 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 
+/**
+ * Controller responsible for redirecting short tokens to the original long URL.
+ * <p>
+ * Example: GET /api/v1/{token} will resolve the token and redirect the
+ * client to the stored long URL. Returns a 404 if the token cannot be resolved.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/v1")
 @Slf4j
@@ -24,7 +31,13 @@ public class RedirectController {
         this.service = service;
     }
 
-    // Redirect Short URL -> Long URL
+    /**
+     * Redirects a request for a short token to the corresponding long URL.
+     *
+     * @param token    the Base62 token path variable
+     * @param response servlet response used to send the redirect or error
+     * @throws IOException when sending the redirect fails
+     */
     @GetMapping("/{token}")
     public void redirect(@PathVariable String token, HttpServletResponse response) throws IOException {
         try {
